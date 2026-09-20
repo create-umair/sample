@@ -18,7 +18,7 @@
       setTimeout(function () {
         img.src = base + f[1] + '?v=1723654759&width=1600';
         img.alt = 'Shilajit Energy Drink, ' + f[0] + ' flavor';
-        img.onload = function () { img.classList.remove('fade'); };
+        img.onload = img.onerror = function () { img.classList.remove('fade'); };
       }, 200);
     });
   });
@@ -31,11 +31,11 @@
     if (e.target.tagName === 'A') { nav.classList.remove('open'); burger.setAttribute('aria-expanded', 'false'); }
   });
 
-  var head = document.querySelector('.head'), top = document.querySelector('.totop');
+  var head = document.querySelector('.head'), totop = document.querySelector('.totop');
   function onScroll() {
     var y = window.scrollY;
     head.classList.toggle('scrolled', y > 40);
-    top.classList.toggle('show', y > 600);
+    totop.classList.toggle('show', y > 600);
   }
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
@@ -46,7 +46,10 @@
   if ('IntersectionObserver' in window) {
     var io = new IntersectionObserver(function (es) {
       es.forEach(function (e) {
-        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+        if (e.isIntersecting) {
+          var t = e.target; t.classList.add('in'); io.unobserve(t);
+          setTimeout(function () { t.classList.remove('rv', 'in'); t.style.removeProperty('--d'); }, 1300);
+        }
       });
     }, { threshold: 0.15 });
     items.forEach(function (el, i) { el.style.setProperty('--d', (i % 4) * 0.1 + 's'); io.observe(el); });
